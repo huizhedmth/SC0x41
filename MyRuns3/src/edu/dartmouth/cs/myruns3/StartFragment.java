@@ -5,7 +5,6 @@ import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import edu.dartmouth.cs.myruns2.R;
 
 public class StartFragment extends PreferenceFragment {
 	@Override

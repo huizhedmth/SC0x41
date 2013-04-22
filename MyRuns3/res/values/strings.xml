@@ -55,10 +55,15 @@
     
 	<string name="dialog_comment_hint">How was the exercise? Speak your mind here:)</string>
     
+    <string name="string_miles">Miles</string>
     
-    
-    
-    
+    <string name="title_display_activity_type">Activity type</string>
+    <string name="title_display_date_time">Date and time</string>
+    <string name="title_display_duration">Duration</string>
+    <string name="title_display_distance">Distance</string>
+    <string name="title_display_calorie">Calories</string>
+    <string name="title_display_heart_rate">Heartrate</string>
+    <string name="title_display_comment">Comment</string>
     
     
     

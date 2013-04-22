@@ -10,10 +10,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import edu.dartmouth.cs.myruns2.R;
+import android.widget.Spinner;
 
 public class MainActivity extends Activity {
 	public static final String KEY_TAB_INDEX = "tab index";
+	public static final String ACTIVITY_TYPE = "activity type";
+	public static final String INPUT_TYPE = "input type";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,18 @@ public class MainActivity extends Activity {
 
 	public void onStartClicked(View view){
 	    Intent intent = new Intent(this, ManualInputActivity.class);
+	    
+	    // pass extra info
+	    Spinner spinner = (Spinner)findViewById(R.id.Spinner_ActivityType);
+	    int pos = spinner.getSelectedItemPosition();
+	    intent.putExtra(ACTIVITY_TYPE, pos);
+
+	    spinner = (Spinner)findViewById(R.id.Spinner_InputType);
+	    pos = spinner.getSelectedItemPosition();
+	    intent.putExtra(INPUT_TYPE, pos);
+	    
 	    startActivity(intent);
+
 	}
 }
 

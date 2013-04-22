@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import edu.dartmouth.cs.myruns2.R;
 
 public class ProfileActivity extends Activity {
 	
@@ -236,7 +235,6 @@ public class ProfileActivity extends Activity {
 			break;
 		}
 	}
-	// ****************** private helper functions ***************************//
 
 	private void loadSnap() {
 
@@ -289,4 +287,5 @@ public class ProfileActivity extends Activity {
 		// identify the activity in onActivityResult() when it returns
 		startActivityForResult(intent, REQUEST_CODE_CROP_PHOTO);
 	}
+	
 }

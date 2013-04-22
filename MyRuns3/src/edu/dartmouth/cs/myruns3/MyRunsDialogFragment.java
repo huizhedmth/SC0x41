@@ -14,7 +14,6 @@ import android.text.InputType;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import edu.dartmouth.cs.myruns2.R;
 
 
 
@@ -34,9 +33,9 @@ public class MyRunsDialogFragment extends DialogFragment {
 
 		private static final String DIALOG_ID_KEY = "dialog id";
 		
-		EditText textEntryView;
-		Calendar now;
-		int hour, minute, year, month, day;
+		public EditText textEntryView;
+		public Calendar now;
+		public int hour, minute, year, month, day;
 
 		public static MyRunsDialogFragment newInstance(int dialog_id) {
 			MyRunsDialogFragment frag = new MyRunsDialogFragment();
@@ -45,6 +44,7 @@ public class MyRunsDialogFragment extends DialogFragment {
 			frag.setArguments(args);
 			return frag;
 		}
+
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -73,6 +73,7 @@ public class MyRunsDialogFragment extends DialogFragment {
 									now.set(Calendar.YEAR, year);
 									now.set(Calendar.MONTH, month);
 									now.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+									((ManualInputActivity)parent).onDateAlertDone();
 							}
 						},
 						now.get(Calendar.YEAR),
@@ -88,6 +89,7 @@ public class MyRunsDialogFragment extends DialogFragment {
 							public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 									now.set(Calendar.HOUR_OF_DAY, hourOfDay);
 									now.set(Calendar.MINUTE, minute);
+									((ManualInputActivity)parent).onTimeAlertDone();
 							}
 						},
 						now.get(Calendar.HOUR_OF_DAY),
@@ -104,7 +106,7 @@ public class MyRunsDialogFragment extends DialogFragment {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
 								((ManualInputActivity) parent)
-										.onAlertOKClick();
+										.onDurationAlertOKClick();
 							}
 						});
 				builder.setNegativeButton(R.string.title_button_alert_cancel,
@@ -125,7 +127,7 @@ public class MyRunsDialogFragment extends DialogFragment {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
 								((ManualInputActivity) parent)
-										.onAlertOKClick();
+										.onDistanceAlertOKClick();
 							}
 						});
 				builder.setNegativeButton(R.string.title_button_alert_cancel,
@@ -146,7 +148,7 @@ public class MyRunsDialogFragment extends DialogFragment {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
 								((ManualInputActivity) parent)
-										.onAlertOKClick();
+										.onCalorieAlertOKClick();
 							}
 						});
 				builder.setNegativeButton(R.string.title_button_alert_cancel,
@@ -167,7 +169,7 @@ public class MyRunsDialogFragment extends DialogFragment {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
 								((ManualInputActivity) parent)
-										.onAlertOKClick();
+										.onHeartRateAlertOKClick();
 							}
 						});
 				builder.setNegativeButton(R.string.title_button_alert_cancel,
@@ -189,7 +191,7 @@ public class MyRunsDialogFragment extends DialogFragment {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
 								((ManualInputActivity) parent)
-										.onAlertOKClick();
+										.onCommentAlertOKClick();
 							}
 						});
 				builder.setNegativeButton(R.string.title_button_alert_cancel,

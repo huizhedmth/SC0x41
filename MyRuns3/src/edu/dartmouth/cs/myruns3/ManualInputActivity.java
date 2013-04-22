@@ -1,12 +1,10 @@
-package edu.dartmouth.cs.myruns3;
+ package edu.dartmouth.cs.myruns3;
 
-import android.app.DialogFragment;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
-import edu.dartmouth.cs.myruns2.R;
 
 public class ManualInputActivity extends ListActivity {
 	
@@ -19,18 +17,44 @@ public class ManualInputActivity extends ListActivity {
 	public static final int LIST_ITEM_ID_HEARTRATE = 5;
 	public static final int LIST_ITEM_ID_COMMENT = 6;
 	
+	private MyRunsDialogFragment dialog;
+	private ExerciseEntry entry;
+	private ExerciseEntryHelper entryHelper;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_manual_input);
-	}
+		entry = new ExerciseEntry();
+		}
 	
 	public void onSaveClicked(View view){
-		/* todo */
+		// save entry to DB 
+		
+		// save activity type and input type
+		int activityType, inputType;
+		Intent intent = getIntent();
+		activityType = intent.getIntExtra(MainActivity.ACTIVITY_TYPE, -1);
+		inputType = intent.getIntExtra(MainActivity.INPUT_TYPE, -1);
+		
+		
+		entry.setActivityType(activityType);
+		entry.setInputType(inputType);
+
+		// pass saved temporary entry to private ExerciseEntryHelper object
+		entryHelper = new ExerciseEntryHelper(entry);
+		entryHelper.insertToDB(this);
+		
+		// clear history data
+		entry = new ExerciseEntry();
+		
+		// return to MainActivity
+		finish();
 	}
 	
 	public void onCancelClicked(View view){
-		/* todo */
+		/* do nothing */
+		finish();
 	}
 	
 	@Override
@@ -70,16 +94,64 @@ public class ManualInputActivity extends ListActivity {
 		displayDialog(dialogId);
 	}
 	/*************** dialog listeners ***************/
-	public void onAlertOKClick(){
-//		Toast.makeText(getApplicationContext(), "onalertOKClick", Toast.LENGTH_SHORT).show();
+	public void onDurationAlertOKClick(){
+		String s = null;
+		if (dialog.textEntryView.getText().length()!=0)
+			s = dialog.textEntryView.getText().toString();		int duration;
+		if(s!=null){
+			duration = Integer.parseInt(s);
+			entry.setDuration(duration);
+		}
 	}
-	public void onAlertCancelClick(){
-//		Toast.makeText(getApplicationContext(), "onalertCancelClick", Toast.LENGTH_SHORT).show();
+	public void onDistanceAlertOKClick(){
+		String s = null;
+		if (dialog.textEntryView.getText().length()!=0)
+			s = dialog.textEntryView.getText().toString();
+		double distance;
+		if(s!=null){
+			distance = Double.parseDouble(s);
+			entry.setDistance(distance);
+		}
 	}
+	public void onCalorieAlertOKClick(){
+		String s = null;
+		if (dialog.textEntryView.getText().length()!=0)
+			s = dialog.textEntryView.getText().toString();
+		int calorie;
+		if(s!=null){
+			calorie = Integer.parseInt(s);
+			entry.setCalorie(calorie);
+		}
+	}
+	public void onHeartRateAlertOKClick(){
+		String s = null;
+		if (dialog.textEntryView.getText().length()!=0)
+			s = dialog.textEntryView.getText().toString();
+		int heartrate;
+		if(s!=null){
+			heartrate = Integer.parseInt(s);
+			entry.setHeartrate(heartrate);
+		}
+	}
+	public void onCommentAlertOKClick(){
+		String s = dialog.textEntryView.getText().toString();
+		if(s!=null)
+			entry.setComment(s);
+	}
+	
+	public void onDateAlertDone(){
+		entry.setDateTime(dialog.now.getTime());
+	}
+	public void onTimeAlertDone(){
+		entry.setDateTime(dialog.now.getTime());
+	}
+	
+	public void onAlertCancelClick(){/* do nothing */}
+	
 	/*************** helper function ****************/
 	public void displayDialog(int id) {
-		DialogFragment fragment = MyRunsDialogFragment.newInstance(id);
-		fragment.show(getFragmentManager(),
+		dialog = MyRunsDialogFragment.newInstance(id);
+		dialog.show(getFragmentManager(),
 				getString(R.string.photo_picker_tag)); // mark: tag may not be trivial...
 	}
 }

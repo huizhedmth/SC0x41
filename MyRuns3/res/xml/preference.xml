@@ -8,9 +8,8 @@
                 android:title="@string/user_profile_title"
                 android:summary="@string/user_profile_summary">
 
-            <intent android:targetPackage="edu.dartmouth.cs.myruns2"
-                    android:targetClass="edu.dartmouth.cs.myruns2.ProfileActivity">
-                
+            <intent android:targetPackage="edu.dartmouth.cs.myruns3"
+                    android:targetClass="edu.dartmouth.cs.myruns3.ProfileActivity">
             </intent>
 
         </PreferenceScreen>  
