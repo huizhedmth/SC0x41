@@ -63,7 +63,7 @@ public class TrackingService extends Service
 	    mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 	    boolean gpsEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 	    if (gpsEnabled)
-	    	mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, this);
+	    	mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, this);
 		// For indoor debugging, can use network cellular location 
 	    else
 	    	mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 5, this);
@@ -117,7 +117,7 @@ public class TrackingService extends Service
 	
 	/************ implement LocationLister interface ***********/
 	public void onLocationChanged(Location location) {
-    	Toast.makeText(getApplication(), "OnLocationChanged", Toast.LENGTH_SHORT).show();
+//    	Toast.makeText(getApplication(), "OnLocationChanged", Toast.LENGTH_SHORT).show();
 
 		// Check whether location is valid, drop if invalid
 		// mark

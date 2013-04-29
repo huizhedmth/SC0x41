@@ -1,6 +1,9 @@
 package edu.dartmouth.cs.myruns4;
 
+import java.util.ArrayList;
 import java.util.Date;
+
+import android.location.Location;
 
 public class ExerciseEntry {
 	
@@ -18,6 +21,8 @@ public class ExerciseEntry {
 	private double climb;
 	private int heartrate;
 	private String comment;
+    private Location[] mTrack; // Location array
+    private ArrayList<Location> mLocationList;
 	
 	public ExerciseEntry(){
 		this.remoteId = -1L;
@@ -33,7 +38,11 @@ public class ExerciseEntry {
 		this.heartrate = 0;
 		this.comment = "";
 	}
-
+	public Location[] getTrack(){ return mTrack;}
+	public void setTrack(Location[] track){mTrack = track;}
+	public ArrayList<Location> getLocationList(){return mLocationList;}
+	public void setLocationList(ArrayList<Location> locationList){mLocationList = locationList;}
+	
 	public long getRemoteId() {
 		return remoteId;
 	}

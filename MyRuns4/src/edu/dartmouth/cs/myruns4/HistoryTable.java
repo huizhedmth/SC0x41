@@ -24,6 +24,7 @@ public class HistoryTable{
 			public static final String KEY_COMMENT = Globals.KEY_COMMENT;
 			public static final String KEY_PRIVACY = Globals.KEY_PRIVACY;
 			public static final String KEY_GPS_DATA = Globals.KEY_GPS_DATA;
+			public static final String KEY_TRACK = Globals.KEY_TRACK;
 
 			// SQL query to create the table for the first time
 			// Data types are defined below
@@ -55,7 +56,7 @@ public class HistoryTable{
 					+ KEY_COMMENT
 					+ " TEXT, "
 					+ KEY_PRIVACY
-					+ " INTEGER, " + KEY_GPS_DATA + " BLOB " + ");";
+					+ " INTEGER, " + KEY_TRACK + " BLOB " + ");";
 			
 			public static void onCreate(SQLiteDatabase database) {
 			    database.execSQL(CREATE_TABLE_ENTRIES);

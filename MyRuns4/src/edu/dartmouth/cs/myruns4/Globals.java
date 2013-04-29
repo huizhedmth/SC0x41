@@ -26,6 +26,7 @@ public abstract class Globals {
 	public static final String KEY_COMMENT = "comment";
 	public static final String KEY_PRIVACY = "privacy";
 	public static final String KEY_GPS_DATA = "gps_data";
+	public static final String KEY_TRACK = "track";
 	
 	// All activity types in a string array.
 	// "Standing" is not an exercise type... it's there for activity recognition result

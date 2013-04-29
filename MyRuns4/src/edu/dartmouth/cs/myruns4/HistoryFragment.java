@@ -79,6 +79,7 @@ public class HistoryFragment extends ListFragment
 	public static final String HEARTRATE = "heart rate";
 	public static final String ACTIVITY_TYPE = "activity type";
 	public static final String TASK_TYPE = "task type";
+	public static final String TRACK = "track";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -175,6 +176,10 @@ public class HistoryFragment extends ListFragment
 		int code = Integer.parseInt(activityType);
 		activityType = activityTypeTable[code].substring(0);
 		intent.putExtra(ACTIVITY_TYPE, activityType);
+		
+		idx = mActivityEntryCursor.getColumnIndex(Globals.KEY_TRACK);
+		String track = mActivityEntryCursor.getString(idx);
+		intent.putExtra(TRACK, track);
 		
 		intent.putExtras(extras);
 

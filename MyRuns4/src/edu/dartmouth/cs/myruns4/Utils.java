@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -39,6 +40,7 @@ public class Utils {
 	
 	// Convert Location array to byte array, to store in SQLite database
 	public static  byte[] fromLocationArrayToByteArray(Location[] locationArray) {
+//		Log.d(null, "enter convertion");
 
 		int[] intArray = new int[locationArray.length * 2];
 
@@ -46,12 +48,13 @@ public class Utils {
 			intArray[i * 2] = (int) (locationArray[i].getLatitude() * 1E6);
 			intArray[(i * 2) + 1] = (int) (locationArray[i].getLongitude() * 1E6);
 		}
+//		Log.d(null, "after for");
 
 		ByteBuffer byteBuffer = ByteBuffer.allocate(intArray.length
 				* Integer.SIZE);
 		IntBuffer intBuffer = byteBuffer.asIntBuffer();
 		intBuffer.put(intArray);
-
+//		Log.d(null, "before return");
 		return byteBuffer.array();
 	}
 

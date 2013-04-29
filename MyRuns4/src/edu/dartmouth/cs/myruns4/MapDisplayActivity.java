@@ -27,7 +27,9 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -70,6 +72,14 @@ public class MapDisplayActivity extends Activity {
 	public static final int MENU_ID_DELETE = 0;
 	
     public boolean mFirstLoc;
+    public Marker curMarker;
+    
+    private double mDistance;
+    private double mAvgSpeed;
+    private int mCalories;
+    private double mStartTime;
+    private double mClimb;
+    private double mCurSpeed;
     
     public LatLng firstLatLng;
 
@@ -119,6 +129,12 @@ public class MapDisplayActivity extends Activity {
 		mActivityType = intent.getIntExtra(MainActivity.ACTIVITY_TYPE, -1);
 		// mark: row id ?
 		
+		mDistance = 0;
+		mCalories = 0;
+		mAvgSpeed = 0;
+		mStartTime = 0;
+		mClimb = 0;
+		
 		// init mEntry
 		mEntry = new ExerciseEntry();
 		mEntry.setActivityType(mActivityType);
@@ -149,7 +165,12 @@ public class MapDisplayActivity extends Activity {
 			cancelButton.setVisibility(View.GONE);
 
 			// Read track from database
-			
+//			intent = getIntent();
+//			Location[] locations = Utils.fromByteArrayToLocationArray(intent.getStringExtra(HistoryFragment.TRACK).getBytes());
+//			mLocationList.clear();
+//			for(int i = 0; i < locations.length; i++)
+//				mLocationList.add(locations[i]);
+				
 			// ----------------------Skeleton--------------------------
 			
 			// Convert the mLocationList to mLatLngList
@@ -239,6 +260,12 @@ public class MapDisplayActivity extends Activity {
 
 		// Insert entry into db
 		long id=0;
+		mEntry.setAvgSpeed(mAvgSpeed);
+		mEntry.setCalorie(mCalories);
+		mEntry.setClimb(mClimb);
+		mEntry.setDistance(mDistance);
+		mEntry.setLocationList(mLocationList);
+		
 		mEntryHelper = new ExerciseEntryHelper(mEntry);
 		id = mEntryHelper.insertToDB(this);		
 		if (id > 0) 
@@ -334,23 +361,28 @@ public class MapDisplayActivity extends Activity {
 		protected LatLng doInBackground(Void... params) {
             Log.d(Globals.TAG, "doInBackground");
 
-//			 update stats
-			mEntry.setActivityType(2);
-			mEntry.setAvgSpeed(1.23);
-			mEntry.setClimb(4.56);
-			mEntry.setCalorie(20);
-			mEntry.setDistance(100);
-						
-			LatLng latlng = Utils.fromLocationToLatLng(mLocationList.get(mLocationList.size()-1));
+            Location loc = mLocationList.get(mLocationList.size()-1);
+			LatLng latlng = Utils.fromLocationToLatLng(loc);
+									
 			// save the start point
 			if (mFirstLoc) {
 				mFirstLoc= false;
 				firstLatLng=latlng;
+				mStartTime = loc.getTime();
 				return latlng;
 			}
 			else {
+	            // update stats
+				Location preLoc = mLocationList.get(mLocationList.size()-2);
+				mDistance = mDistance + loc.distanceTo(preLoc);
+				mAvgSpeed = mDistance / ((loc.getTime()-mStartTime) / 1000); 
+				mCurSpeed = loc.distanceTo(mLocationList.get(mLocationList.size()-2)) / ((loc.getTime()-preLoc.getTime()) / 1000);
+				mClimb = loc.getAltitude();
+				mEntry.setCalorie(20);
 				return null;
 			}	
+			
+			// mark: return value?
 		}
 		
 		// The UI update is done in UI thread, here we draw the GPS trace.
@@ -363,14 +395,12 @@ public class MapDisplayActivity extends Activity {
 				// ----------------------Skeleton--------------------------
 				// Initialization
 				// mark ?
-	            Log.d(Globals.TAG, "onPostExecute 1");
 
 				// Convert the mLocationList to mLatLngList 
 				for (int i = 0; i < mLocationList.size() ; i++) {
 					Location loc = mLocationList.get(i);
 					mLatLngList.add(Utils.fromLocationToLatLng(loc)); 
 				}
-	            Log.d(Globals.TAG, "onPostExecute 2");
 
 				// draw trace using PolyLine
 				rectOptions = new PolylineOptions();
@@ -379,22 +409,23 @@ public class MapDisplayActivity extends Activity {
 					rectOptions.add(mLatLngList.get(i));
 					polyline = mMap.addPolyline(rectOptions);
 				}
-	            Log.d(Globals.TAG, "onPostExecute 3");
 
 				// draw start marker
 				mMap.addMarker(new MarkerOptions().position(firstLatLng).title("Start Point"));
 				
 				// draw current marker
-				mMap.addMarker(new MarkerOptions().position(mLatLngList.get(mLatLngList.size()-1)).title("You Are Here"));
+				if (curMarker!=null)
+					curMarker.remove();
+				curMarker = mMap.addMarker(new MarkerOptions().position(mLatLngList.get(mLatLngList.size()-1)).
+						title("You Are Here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 				
 				// Get real-time stats from the Exercise Entry
 				String type = Globals.TYPE_STATS + HistoryFragment.activityTypeTable[mEntry.getActivityType()];
-				String avgSpeed = Globals.AVG_SPEED_STATS + String.valueOf(mEntry.getAvgSpeed());
-				String curSpeed = Globals.CUR_SPEED_STATS + "N/A";
-				String climb = Globals.CLIMB_STATS + String.valueOf(mEntry.getClimb());
-				String calories = Globals.CALORIES_STATS + String.valueOf(mEntry.getCalorie());
-				String distance = Globals.DISTANCE_STATS + String.valueOf(mEntry.getDistance());
-	            Log.d(Globals.TAG, "onPostExecute 4");
+				String avgSpeed = Globals.AVG_SPEED_STATS + String.valueOf(mAvgSpeed);
+				String curSpeed = Globals.CUR_SPEED_STATS + String.valueOf(mCurSpeed);
+				String climb = Globals.CLIMB_STATS + String.valueOf(mClimb);
+				String calories = Globals.CALORIES_STATS + String.valueOf(mCalories);
+				String distance = Globals.DISTANCE_STATS + String.valueOf(mDistance);
 
 				// Draw the stats on the map
 				typeStats.setText(type);

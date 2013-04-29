@@ -7,8 +7,9 @@ import java.util.GregorianCalendar;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
-import android.widget.Toast;
+import android.util.Log;
 
 public class ExerciseEntryHelper {
 	
@@ -46,7 +47,9 @@ public class ExerciseEntryHelper {
 		values.put(HistoryTable.KEY_HEARTRATE, mData.getHeartrate());
 		values.put(HistoryTable.KEY_INPUT_TYPE, mData.getInputType());
 		values.put(HistoryTable.KEY_ROWID,	mData.getId());
-		
+		Location[] tmp = (Location[]) mData.getLocationList().toArray(new Location[0]);
+		values.put(HistoryTable.KEY_TRACK, Utils.fromLocationArrayToByteArray(tmp));
+
 		//get the content resolver, insert the ContentValues into HistoryProvider.
         Uri uri = context.getContentResolver().insert(HistoryProvider.CONTENT_URI, values);
 		

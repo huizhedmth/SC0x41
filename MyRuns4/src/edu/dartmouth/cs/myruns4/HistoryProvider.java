@@ -181,7 +181,8 @@ public class HistoryProvider extends ContentProvider {
 									HistoryTable.KEY_GPS_DATA,
 									HistoryTable.KEY_HEARTRATE,
 									HistoryTable.KEY_INPUT_TYPE,
-									HistoryTable.KEY_PRIVACY
+									HistoryTable.KEY_PRIVACY,
+									HistoryTable.KEY_TRACK
 									};
 			if (projection != null) {
 				HashSet<String> requestedColumns = new HashSet<String>(
