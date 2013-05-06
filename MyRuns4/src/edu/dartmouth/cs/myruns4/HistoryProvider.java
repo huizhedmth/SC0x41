@@ -17,6 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 
 
@@ -97,7 +98,10 @@ public class HistoryProvider extends ContentProvider {
 			long id = 0;
 			switch (uriType) {
 			case ENTRIES_DIR:
+				Log.d(null, "inserting to database");
 				id = sqlDB.insert(HistoryTable.TABLE_NAME_ENTRIES, null, values);
+				Log.d(null, "insert success");
+
 //				Toast.makeText(getContext(), "HistoryProvider: insert", Toast.LENGTH_SHORT).show();
 				break;
 			default:

@@ -84,7 +84,7 @@ public class TrackingService extends Service
 		
 		Notification notification = new Notification.Builder(this)
         .setContentTitle(notificationTitle)
-        .setContentText(notificationText).setSmallIcon(R.drawable.default_profile)
+        .setContentText(notificationText).setSmallIcon(R.drawable.greend)
         .setContentIntent(pendingIntent).build();
 	    NotificationManager notificationManager = 
 	    		  (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

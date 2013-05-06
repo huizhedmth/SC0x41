@@ -156,7 +156,9 @@ containing a value of this type.
     }
     public static final class drawable {
         public static final int default_profile=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
+        public static final int greend=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int runner=0x7f020003;
     }
     public static final class id {
         public static final int ButtonCancel=0x7f050026;

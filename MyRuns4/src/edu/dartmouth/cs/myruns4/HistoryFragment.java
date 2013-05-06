@@ -1,5 +1,7 @@
 package edu.dartmouth.cs.myruns4;
 
+import java.util.ArrayList;
+
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Context;
@@ -7,7 +9,9 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +19,6 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
-
-// Display the history of exercises in a list view. 
-// For each item in the list, based on the type, can be GPS||Automatic or Manual,
-// different activities will be launched to view the details: MapDisplayActivity or DisplayEntryActivity
-
 
 public class HistoryFragment extends ListFragment 
 			implements	LoaderManager.LoaderCallbacks<Cursor> 
@@ -80,6 +77,8 @@ public class HistoryFragment extends ListFragment
 	public static final String ACTIVITY_TYPE = "activity type";
 	public static final String TASK_TYPE = "task type";
 	public static final String TRACK = "track";
+	public static final String AVG_SPEED = "average speed";
+	public static final String CLIMB = "climb";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -171,6 +170,17 @@ public class HistoryFragment extends ListFragment
 		String heartrate = mActivityEntryCursor.getString(idx);
 		intent.putExtra(HEARTRATE, heartrate);
 		
+		Log.d(null, "getting avgSpeed");
+		idx = mActivityEntryCursor.getColumnIndex(Globals.KEY_AVG_SPEED);
+		String avgSpeed = mActivityEntryCursor.getString(idx);
+		intent.putExtra(AVG_SPEED, avgSpeed);
+		
+		Log.d(null, "getting climb");
+
+		idx = mActivityEntryCursor.getColumnIndex(Globals.KEY_CLIMB);
+		String climb = mActivityEntryCursor.getString(idx);
+		intent.putExtra(CLIMB, climb);
+		
 		idx = mActivityEntryCursor.getColumnIndex(Globals.KEY_ACTIVITY_TYPE);
 		String activityType = mActivityEntryCursor.getString(idx);
 		int code = Integer.parseInt(activityType);
@@ -178,10 +188,18 @@ public class HistoryFragment extends ListFragment
 		intent.putExtra(ACTIVITY_TYPE, activityType);
 		
 		idx = mActivityEntryCursor.getColumnIndex(Globals.KEY_TRACK);
-		String track = mActivityEntryCursor.getString(idx);
-		intent.putExtra(TRACK, track);
+		byte[] byteArray = mActivityEntryCursor.getBlob(idx);
+		if (byteArray!=null){
+			Location[] locations = Utils.fromByteArrayToLocationArray(byteArray);
+			ArrayList<Location> locationList = new ArrayList<Location>();
+			Log.d(null, "converting locations[] to ArrayList");
+			for (int i = 0; i < locations.length; i++)
+				locationList.add(locations[i]);
+			intent.putParcelableArrayListExtra(TRACK, locationList);
+		}
 		
 		intent.putExtras(extras);
+		Log.d(null, "firing intent");
 
 		// Based on different input type, launching different activities
 		switch (inputType) {
@@ -256,8 +274,19 @@ public class HistoryFragment extends ListFragment
 		        
 		        // line2: distance and duration
 		        typeIndex = cursor.getColumnIndex(Globals.KEY_DISTANCE);
+		        
+		        // units
+		        int inputTypeIndex = cursor.getColumnIndex(Globals.KEY_INPUT_TYPE);
+		        String inputType = cursor.getString(inputTypeIndex);
+		        
 		        line2 = cursor.getString(typeIndex);
-		        line2 = line2 + " Miles, ";
+		        if (inputType.equals("1"))
+		        	line2 = line2 + " Meters, ";
+		        else if (inputType.equals("0"))
+		        	line2 = line2 + " Miles, ";
+		        else{ // hold place}
+		        }
+		        
 		        typeIndex = cursor.getColumnIndex(Globals.KEY_DURATION);
 		        line2 = line2 + cursor.getString(typeIndex);
 		        TextView text2 = (TextView) view.findViewById(android.R.id.text2);

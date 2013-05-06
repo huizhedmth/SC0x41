@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -36,7 +37,8 @@ public class DisplayEntryActivity extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		mContext = this;
-		
+		Log.d(null, "DisplayEntry: onCreate");
+
 		//inflate the entry layout. 
 		setContentView(R.layout.activity_display_entry);
 		
@@ -49,7 +51,8 @@ public class DisplayEntryActivity extends Activity {
 	 	text7 = (EditText) findViewById(R.id.edit_display_comment);
 		
 		Intent intent = getIntent();
-	
+		Log.d(null, "DisplayEntry: 1");
+
 		//display all the columns from the exercise entry to the list of TextView.
 		String activityType = intent.getStringExtra(HistoryFragment.ACTIVITY_TYPE);
 		String date_time = intent.getStringExtra(HistoryFragment.DATE_TIME);
@@ -58,7 +61,8 @@ public class DisplayEntryActivity extends Activity {
 		String calorie = intent.getStringExtra(HistoryFragment.CALORIE);
 		String heartrate = intent.getStringExtra(HistoryFragment.HEARTRATE);
 		String comment = intent.getStringExtra(HistoryFragment.COMMENT);
-		
+		Log.d(null, "DisplayEntry: 2");
+
 		text1.setText(activityType);
 		text2.setText(date_time);
 		text3.setText(duration);
